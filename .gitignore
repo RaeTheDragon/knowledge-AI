@@ -1,32 +1,46 @@
-# Prerequisites
-*.d
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+// Define a function that takes a user input and returns a response.
+std::string get_response(const std::string& input, std::map<std::string, std::vector<std::string>>& knowledge_base)
+{
+    // Check if the input matches any existing knowledge.
+    auto iter = knowledge_base.find(input);
+    if (iter != knowledge_base.end()) {
+        // If the input matches an existing knowledge, return a corresponding response.
+        const auto& responses = iter->second;
+        return responses[rand() % responses.size()];
+    }
 
-# Precompiled Headers
-*.gch
-*.pch
+    // If the input doesn't match any existing knowledge, ask the user to teach the AI something new.
+    std::cout << "I'm not sure what you mean. Can you teach me something new?" << std::endl;
+    std::string new_knowledge;
+    std::getline(std::cin, new_knowledge);
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+    // Add the new knowledge to the knowledge base.
+    knowledge_base[input].push_back(new_knowledge);
 
-# Fortran module files
-*.mod
-*.smod
+    return "Thank you for teaching me something new!";
+}
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+int main()
+{
+    std::cout << "Hello! I am an AI. Let's chat." << std::endl;
 
-# Executables
-*.exe
-*.out
-*.app
+    // Create a knowledge base to store the AI's knowledge.
+    std::map<std::string, std::vector<std::string>> knowledge_base;
+
+    while (true) {
+        // Get user input.
+        std::string input;
+        std::getline(std::cin, input);
+
+        // Generate a response and output it to the console.
+        std::string response = get_response(input, knowledge_base);
+        std::cout << response << std::endl;
+    }
+
+    return 0;
+}
